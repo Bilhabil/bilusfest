@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('images/bilus-fest-logo.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -844,7 +845,7 @@
                     <div>Platform tiket festival musik yang lebih modern, bersih, dan mudah digunakan.</div>
                 </div>
                 <div class="text-lg-end">
-                    <div>&copy; 2025 Bilus Fest</div>
+                    <div>&copy; 2026 Bilus Fest</div>
                     <div>Checkout cepat, e-ticket digital, dan QR check-in.</div>
                 </div>
             </div>

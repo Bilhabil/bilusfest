@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('images/bilus-fest-logo.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -147,6 +148,61 @@
             border: 1px solid var(--border);
             border-radius: 22px;
             box-shadow: var(--shadow-soft);
+        }
+
+        .pagination-shell {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.4rem;
+        }
+
+        .pagination-shell .pagination {
+            margin-bottom: 0;
+            padding: 0.35rem;
+            gap: 0.35rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.06);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .pagination-shell .page-item {
+            margin: 0;
+        }
+
+        .pagination-shell .page-link {
+            min-width: 44px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px !important;
+            border: 1px solid transparent;
+            color: #475569;
+            font-weight: 700;
+            padding: 0 0.95rem;
+            background: transparent;
+            box-shadow: none;
+            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .pagination-shell .page-link:hover {
+            background: rgba(79, 70, 229, 0.08);
+            color: #3730A3;
+            transform: translateY(-1px);
+        }
+
+        .pagination-shell .page-item.active .page-link {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+            color: #fff;
+            box-shadow: 0 12px 24px rgba(79, 70, 229, 0.22);
+        }
+
+        .pagination-shell .page-item.disabled .page-link {
+            color: #CBD5E1;
+            background: rgba(248, 250, 252, 0.9);
         }
 
         @media (max-width: 991.98px) {

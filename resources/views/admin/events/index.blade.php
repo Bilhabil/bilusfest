@@ -35,7 +35,9 @@
                     @endforelse
                 </tbody>
             </table>
-            {{ $events->links() }}
+            <div class="pagination-shell">
+                {{ $events->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
 </div>

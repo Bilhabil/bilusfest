@@ -136,6 +136,17 @@
         margin-bottom: 1rem;
     }
 
+    .event-description {
+        color: #64748B;
+        font-size: 0.96rem;
+        line-height: 1.75;
+        margin-bottom: 1.1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
     .event-meta-list {
         display: grid;
         gap: 0.85rem;
@@ -313,6 +324,7 @@
 
                         <div class="event-card-body">
                             <h3 class="event-name">{{ $event->name }}</h3>
+                            <p class="event-description">{{ $event->display_description }}</p>
 
                             <div class="event-meta-list">
                                 <div class="event-meta-item">
@@ -364,7 +376,7 @@
 
         @if($events->hasPages())
             <div class="pagination-shell mt-5">
-                {{ $events->links() }}
+                {{ $events->links('pagination::bootstrap-5') }}
             </div>
         @endif
     </section>

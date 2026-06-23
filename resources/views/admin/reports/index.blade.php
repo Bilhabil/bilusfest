@@ -29,7 +29,9 @@
                     @endforelse
                 </tbody>
             </table>
-            {{ $orders->links() }}
+            <div class="pagination-shell">
+                {{ $orders->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
 </div>
