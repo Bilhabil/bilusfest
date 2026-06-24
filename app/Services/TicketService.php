@@ -14,7 +14,12 @@ class TicketService
     public function generateTickets(Order $order): void
     {
         DB::transaction(function () use ($order) {
-            $order->load('details.ticketCategory', 'details.tickets');
+            $details = $order->details()
+                ->with(['ticketCategory', 'tickets.qrCode'])
+                ->lockForUpdate()
+                ->get();
+
+            $order->setRelation('details', $details);
 
             foreach ($order->details as $detail) {
                 $existingTickets = $detail->tickets->count();
