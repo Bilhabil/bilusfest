@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Event;
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
@@ -18,7 +19,16 @@ use App\Http\Controllers\Payment\MidtransWebhookController;
 use App\Http\Controllers\TicketValidationController;
 
 Route::get('/', function () {
-    return view('landing');
+    $featuredEvents = Event::query()
+        ->where('status', 'active')
+        ->with(['ticketCategories' => function ($query) {
+            $query->where('status', 'active');
+        }])
+        ->latest()
+        ->take(3)
+        ->get();
+
+    return view('landing', compact('featuredEvents'));
 })->name('landing');
 
 Route::get('/ticket/validate/{ticketNumber}', [TicketValidationController::class, 'validateTicket'])

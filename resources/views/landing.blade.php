@@ -453,18 +453,123 @@
             margin-bottom: 0.9rem;
         }
 
-        .price-row {
+        .event-section-header {
             display: flex;
-            align-items: center;
+            align-items: end;
             justify-content: space-between;
             gap: 1rem;
-            margin-top: 1.25rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .event-section-note {
+            color: var(--muted);
+            max-width: 55ch;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .event-section-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 0 1.1rem;
+            border-radius: 14px;
+            border: 1px solid rgba(79, 70, 229, 0.16);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary);
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .event-section-cta:hover {
+            transform: translateY(-2px);
+            border-color: rgba(79, 70, 229, 0.24);
+            box-shadow: 0 16px 28px rgba(15, 23, 42, 0.06);
+            color: var(--primary);
+        }
+
+        .event-card-copy {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 3.35em;
+        }
+
+        .event-action-link {
+            min-width: 180px;
+            flex: none;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1.15rem;
+            margin-top: auto;
+            padding-top: 1.15rem;
         }
 
         .price-text {
             font-size: 1.16rem;
             font-weight: 800;
             letter-spacing: -0.03em;
+            white-space: nowrap;
+        }
+
+        .event-card {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-card .card-body-custom {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .event-card-title {
+            margin: 0 0 0.45rem;
+            font-size: 1.45rem;
+            line-height: 1.14;
+            letter-spacing: -0.05em;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .event-card-location {
+            margin: 0 0 1rem;
+            color: var(--muted);
+            font-size: 0.98rem;
+            line-height: 1.55;
+        }
+
+        .event-card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-meta-pill {
+            display: inline-flex;
+            align-items: center;
+            min-height: 32px;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(79, 70, 229, 0.08);
+            color: var(--primary);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .event-price-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
         }
 
         .soft-section {
@@ -566,18 +671,24 @@
                 padding: 4.5rem 0;
             }
 
+            .event-section-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
             .cta-panel {
                 padding: 2rem;
             }
 
             .price-row {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
             }
 
             .price-row .btn-primary-custom {
                 width: 100%;
                 text-align: center;
+                min-width: 0;
             }
         }
     </style>
@@ -678,6 +789,80 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-spacing soft-section" id="pilihan-event">
+            <div class="container">
+                <div class="event-section-header reveal">
+                    <div>
+                        <div class="section-label">Pilihan Event</div>
+                        <h2 class="section-title mb-2">Pilih event yang paling cocok, lalu login untuk memesan.</h2>
+                        <p class="event-section-note">
+                            Kartu event di bawah ini bisa dilihat langsung dari halaman depan. Saat ingin melanjutkan pemesanan,
+                            sistem tetap akan meminta login agar order tercatat ke akun yang benar.
+                        </p>
+                    </div>
+
+                    <a href="{{ $eventsUrl }}" class="event-section-cta">Lihat Semua Event</a>
+                </div>
+
+                <div class="row g-4">
+                    @forelse ($featuredEvents as $event)
+                        @php
+                            $isUser = auth()->check() && auth()->user()->role === 'user';
+                            $isAdmin = auth()->check() && auth()->user()->role === 'admin';
+                            $startingPrice = $event->ticketCategories->isNotEmpty()
+                                ? $event->ticketCategories->min('price')
+                                : null;
+                            $orderUrl = $isUser
+                                ? route('user.events.show', $event)
+                                : ($isAdmin
+                                    ? route('admin.events.show', $event)
+                                    : route('login', ['intended' => route('user.events.show', $event, absolute: false)]));
+                            $orderLabel = $isUser
+                                ? 'Pesan Tiket'
+                                : ($isAdmin ? 'Kelola Event' : 'Login untuk Pesan');
+                        @endphp
+
+                        <div class="col-md-4 reveal">
+                            <article class="event-card">
+                                <div class="event-image" style="background-image: url('{{ $event->display_banner_url }}')">
+                                    <span class="event-badge">{{ $event->event_date->format('d M Y') }}</span>
+                                </div>
+
+                                <div class="card-body-custom">
+                                    <h3 class="event-card-title">{{ $event->name }}</h3>
+                                    <p class="event-card-location">{{ $event->location }}</p>
+                                    <div class="event-card-meta">
+                                        <span class="event-meta-pill">{{ $event->ticketCategories->count() }} kategori tiket</span>
+                                        <span class="event-meta-pill">{{ $event->event_date->format('d M Y') }}</span>
+                                    </div>
+                                    <p class="mini-text event-card-copy">{{ $event->display_description }}</p>
+
+                                    <div class="price-row">
+                                        <div class="event-price-wrap">
+                                            <div class="event-status">Mulai dari</div>
+                                            <div class="price-text">
+                                                {{ $startingPrice ? 'Rp '.number_format($startingPrice, 0, ',', '.') : 'Harga menyusul' }}
+                                            </div>
+                                        </div>
+
+                                        <a href="{{ $orderUrl }}" class="btn btn-primary-custom event-action-link">
+                                            {{ $orderLabel }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    @empty
+                        <div class="col-12 reveal">
+                            <div class="empty-state">
+                                Belum ada event aktif yang siap ditampilkan.
+                            </div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </section>
