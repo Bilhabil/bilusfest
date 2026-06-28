@@ -22,11 +22,33 @@ class MidtransController extends Controller
                 ->with('error', 'Order ini sudah tidak bisa dibayar.');
         }
 
+        $payment = Payment::where('order_id', $order->id)->latest()->first();
+
+        if ($payment?->status === 'pending' && filled($payment->snap_token)) {
+            return view('user.payment.pay', [
+                'order' => $order,
+                'snapToken' => $payment->snap_token,
+            ]);
+        }
+
         try {
             $midtransService = app(MidtransService::class);
             $snapToken = $midtransService->createSnapToken($order);
         } catch (Throwable $exception) {
             Log::error('Midtrans payment failed', $this->midtransLogContext($order, $exception));
+
+            if ($payment?->status === 'pending' && filled($payment->snap_token)) {
+                Log::warning('Reusing existing Midtrans snap token after token creation failed', [
+                    'order_id' => $order->id,
+                    'order_code' => $order->order_code,
+                    'payment_id' => $payment->id,
+                ]);
+
+                return view('user.payment.pay', [
+                    'order' => $order,
+                    'snapToken' => $payment->snap_token,
+                ]);
+            }
 
             return redirect()
                 ->route('user.orders.show', $order)

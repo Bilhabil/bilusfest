@@ -7,6 +7,7 @@
         <div class="card-body">
             <p><b>Kode Order:</b> {{ $order->order_code }}</p>
             <p><b>Total Bayar:</b> Rp {{ number_format($order->total_price,0,',','.') }}</p>
+            <p class="text-muted mb-3">Kalau popup pembayaran ditutup, kamu bisa buka lagi dari detail pesanan.</p>
 
             <button id="pay-button" class="btn btn-primary">Bayar Sekarang</button>
             <a href="{{ route('user.orders.show',$order) }}" class="btn btn-secondary">Kembali</a>
@@ -28,7 +29,7 @@ document.getElementById('pay-button').onclick = function () {
             window.location.href = "{{ route('user.payment.failed',$order) }}";
         },
         onClose: function() {
-            alert('Popup pembayaran ditutup.');
+            window.location.href = "{{ route('user.orders.show',$order) }}";
         }
     });
 };
